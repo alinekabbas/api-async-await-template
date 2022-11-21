@@ -15,14 +15,15 @@ function App() {
   const [pageFlow, setPageFlow] = useState(1);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
-  const [pesquisa, setPesquisa] = useState({ nome: "", email: "" });
+  //const [pesquisa, setPesquisa] = useState({ nome: "", email: "" });
 
   useEffect(() => {
     getUsuarios();
   }, []);
 
-  const getUsuarios = () => {
-    axios
+  const getUsuarios = async () => {
+    try {
+      const res = await axios
       .get(
         "https://us-central1-labenu-apis.cloudfunctions.net/labenusers/users",
         {
@@ -31,16 +32,22 @@ function App() {
           },
         }
       )
-      .then((res) => {
-        setUsuarios(res.data);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
+      setUsuarios(res.data);
+      
+    } catch (error) {
+      console.log(error.response);
+    }
+      // .then((res) => {
+      //   setUsuarios(res.data);
+      // })
+      // .catch((error) => {
+      //   
+      // });
   };
 
-  const pesquisaUsuario = (pesquisa) => {
-    axios
+  const pesquisaUsuario = async (pesquisa) => {
+    try {
+      const res = await axios
       .get(
         `https://us-central1-labenu-apis.cloudfunctions.net/labenusers/users/search?name=${pesquisa.nome}&email=${pesquisa.email}`,
         {
@@ -49,13 +56,20 @@ function App() {
           },
         }
       )
-      .then((res) => {
-        setUsuarios(res.data);
-        setPageFlow(3)
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
+      setUsuarios(res.data);
+      setPageFlow(3)    
+        
+    } catch (error) {
+      console.log(error.response);
+    }
+    
+      // .then((res) => {
+      //   setUsuarios(res.data);
+      //   setPageFlow(3)
+      // })
+      // .catch((error) => {
+      //   console.log(error.response);
+      // });
   };
 
   const onChangeName = (e) => {
@@ -71,8 +85,12 @@ function App() {
       nome,
       email,
     };
-    setPesquisa(novaPesquisa);
-    pesquisaUsuario(pesquisa);
+    // Aqui o estado de pesquisa ainda é "" pq ainda não re-renderizou
+    // entáo é desnecessário pq já temos uma novaPesquisa acima
+    //setPesquisa(novaPesquisa);
+
+    //Aqui mudamos para novaPesquisa
+    pesquisaUsuario(novaPesquisa);
     setNome("")
     setEmail("")
     

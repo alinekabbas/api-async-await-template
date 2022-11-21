@@ -35,12 +35,13 @@ export const EditarUsuario = (props) => {
     getDadosUsuario();
   }, []);
 
-  const editaUsuario = () => {
-    const body = {
+  const editaUsuario = async () => {
+    try {
+      const body = {
         name,
         email
       };
-      axios
+       await axios
         .put(
           `https://us-central1-labenu-apis.cloudfunctions.net/labenusers/users/${usuario.id}`,
           body,
@@ -50,14 +51,21 @@ export const EditarUsuario = (props) => {
             }
           }
         )
-        .then(() => {
-          getDadosUsuario();
-          setEditar(!editar)
-        });
+        getDadosUsuario();
+        setEditar(!editar)
+      
+    } catch (error) {
+      console.log(error.response)
+    }
+        // .then(() => {
+        //   getDadosUsuario();
+        //   setEditar(!editar)
+        // });
   }
 
-  const deletarUsuario = () => {
-    axios
+  const deletarUsuario = async () => {
+    try {
+      await axios
       .delete(
         `https://us-central1-labenu-apis.cloudfunctions.net/labenusers/users/${usuario.id}`,
         {
@@ -66,14 +74,19 @@ export const EditarUsuario = (props) => {
           }
         }
       )
-      .then(() => {
-        alert("usuario removido");
-        // chama de novo o get usuarios pra atualizar a lista
-        props.getUsuarios();
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
+      alert("usuario removido");
+      props.getUsuarios();
+    } catch (error) {
+      console.log(error.response);
+    }
+      // .then(() => {
+      //   alert("usuario removido");
+      //   // chama de novo o get usuarios pra atualizar a lista
+      //   props.getUsuarios();
+      // })
+      // .catch((err) => {
+      //   console.log(err.response);
+      // });
   };
 
 
